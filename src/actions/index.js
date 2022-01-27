@@ -21,12 +21,14 @@ export const  fetchPosts = () => async dispatch => {
 //     }) 
 // }
 
+// Over Fetching Solution #1
 
-export const  fetchUser = (id) => dispatch => {
-    // call to memoized version of fetchUser
-    _fetchUser(id, dispatch);
-}
+// export const  fetchUser = (id) => dispatch => {
+//     // call to memoized version of fetchUser
+//     _fetchUser(id, dispatch);
+// }
 
+// MEMOIZED FETCHUSER
 const _fetchUser = _.memoize(async (id, dispatch) => {
 
     const { data } = await jsonPlaceholder.get(`/users/${id}`)
@@ -37,3 +39,20 @@ const _fetchUser = _.memoize(async (id, dispatch) => {
     }) 
 
 })
+
+// Over Fetching Solution #2
+
+export const  fetchUser = (id) => async dispatch => {
+    const { data } = await jsonPlaceholder.get(`/users/${id}`)
+
+    dispatch({
+        type: 'FETCH_USER',
+        payload: data
+    }) 
+}
+
+export const fetchPostsAndUsers = () => async (dispatch, getState) => {
+    await dispatch(fetchPosts())
+    const userIds = _.uniq(_.map(getState().posts, 'userId'))
+    userIds.forEach(id => dispatch(fetchUser(id)))
+}

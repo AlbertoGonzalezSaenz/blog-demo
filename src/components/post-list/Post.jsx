@@ -1,13 +1,9 @@
 import React, { useEffect }  from 'react';
 import { connect } from 'react-redux';
 
-import { fetchUser } from '../../actions';
+const Post = ({post, user }) => {
 
-const Post = ({post, user , fetchUser}) => {
 
-    useEffect(() => {
-        fetchUser(post.userId)
-    },[])
 
     return (
         <div className="item">
@@ -27,4 +23,4 @@ const mapStateToProps = (state, { post }) => {
     return {user: state.users.find(user => user.id === post.userId)}
 }
 
-export default connect(mapStateToProps, { fetchUser })(Post);
+export default connect(mapStateToProps)(Post);
